@@ -22,10 +22,11 @@ function App() {
         [randomUser]: !prevState[randomUser],
       }));
     }, 2000);
-    return clearInterval(interval);
+    return () => clearInterval(interval);
   }, [userState]);
+
   return (
-    <UserContext.Provider value={{ userState, setUserState }}>
+    <UserContext.Provider value={{ userState }}>
       <UserList />
     </UserContext.Provider>
   );
@@ -43,31 +44,8 @@ const UserList = () => {
   );
 };
 const User = ({ username, online }) => {
-  const { userState, setUserState } = useContext(UserContext);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setUserState((prevState) => ({
-        ...prevState,
-        [username]: !prevState[username],
-      }));
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [username, setUserState]);
-
-  const toggleOnlineStatus = () => {
-    setUserState((prevState) => ({
-      ...prevState,
-      [username]: !prevState[username],
-    }));
-  };
-
   return (
-    <div
-      className="flex items-center mb-2 cursor-pointer"
-      onClick={toggleOnlineStatus}
-    >
+    <div className="flex items-center mb-2">
       <span className="mr-2">{username}</span>{" "}
       {online ? (
         <span className="text-green-500">🟢</span>
